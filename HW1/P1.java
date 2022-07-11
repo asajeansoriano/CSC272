@@ -1,67 +1,101 @@
 import java.io.File;
 import java.util.*;
 
-// Metric Conversions
-// User should specify names of units as strings
-
 public class P1 {
-    
 
-    
-    public class MetricConverter {
-        private double value;
-        private String fromUnit;
-        private String toUnit;
-        //String dictionary where the key is the unit and the value is the conversion factor
+    private double value;
+    private String fromUnit;
+    private String toUnit;
+    //String dictionary where the key is the unit and the value is the conversion factor
+    static HashMap<String, Double> length = new HashMap<String, Double>();
+    static HashMap<String, Double> mass = new HashMap<String, Double>();
+    static HashMap<String, Double> time = new HashMap<String, Double>();
+
+
+    public static void main(String[] args) {
         //meters is the base unit for length
-        static HashMap<String, Double> length = new HashMap<String, Double>();
+        length.put("meters", 1.0);
+        length.put("inches", 39.37008);
+        length.put("feet", 3.28084);
+        length.put("yards", 1.09361);
+        length.put("miles", 0.000621371);
         //gram is the base unit for mass
-        static HashMap<String, Double> mass = new HashMap<String, Double>();
+        mass.put("grams", 1.0);
+        mass.put("ounces", 0.035274);
+        mass.put("pounds", 0.00220462);
+        mass.put("tons", 907185.0);
         //seconds is the base unit for time
-        static HashMap<String, Double> time = new HashMap<String, Double>();
+        time.put("seconds", 1.0);
+        time.put("minutes", 60.0);
+        time.put("hours", 3600.0);
+        time.put("days", 86400.0);
 
+        //take in question from user input
+        System.out.println("Please enter the question you would like to convert: ");
+        Scanner input = new Scanner(System.in);
+        String question = input.nextLine();
+        //remove the ? at the end of the question
+        question = question.substring(0, question.length() - 1);
 
-        public static void main(String[] args) {
-            //create file input steam to read from file length_conversions.txt
-            Scanner file = new Scanner(new File("length_conversions.txt"));
-        }
+        //split the question into three parts: value, fromUnit, toUnit
+        // For example: "How many inches are in 2 meters?"
+        // value = 2, fromUnit = "meters", toUnit = "inches"
+        String[] questionSplit = question.split(" ");
+        //convert the value to a double
+        double value = Double.parseDouble(questionSplit[5]);
+        //convert the fromUnit to a string
+        String fromUnit = questionSplit[6];
+        //convert the toUnit to a string
+        String toUnit = questionSplit[2];
+        //convert the value from the fromUnit to the toUnit
+        double convertedValue = convert(fromUnit, toUnit, value);
+        System.out.println(convertedValue);
+        input.close();
+    }
 
-        private static boolean isSameProperty(String fromUnit, String toUnit) {
-            //check length, mass, time, and temperature to see if FromUnit and ToUnit are in the same list
-            if (Arrays.asList(length).contains(fromUnit) && Arrays.asList(length).contains(toUnit)) {
-                return true;
-            } else if (Arrays.asList(mass).contains(fromUnit) && Arrays.asList(mass).contains(toUnit)) {
-                return true;
-            } else if (Arrays.asList(time).contains(fromUnit) && Arrays.asList(time).contains(toUnit)) {
-                return true;
-            }
+    private static boolean isSameProperty(String fromUnit, String toUnit) {
+        //check length, mass, and time to see if FromUnit and ToUnit are in the same category
+        if (length.containsKey(fromUnit) && length.containsKey(toUnit)) {
+            return true;
+        } else if (mass.containsKey(fromUnit) && mass.containsKey(toUnit)) {
+            return true;
+        } else if (time.containsKey(fromUnit) && time.containsKey(toUnit)) {
+            return true;
+        } else {
             return false;
-            
-        }
-        
-        public static double convert(String fromUnit, String toUnit, double value) {
-            //remove "s" from the end of the unit name
-            if (fromUnit.endsWith("s")) {
-                fromUnit = fromUnit.substring(0, fromUnit.length() - 1);
-            }
-            //if it is "inches" remove "es" from the end of the unit name
-            if (fromUnit.endsWith("es")) {
-                fromUnit = fromUnit.substring(0, fromUnit.length() - 2);
-            }
-            //if fromUnit is "feet", change it to "foot"
-            if (fromUnit.equals("feet")) {
-                fromUnit = "foot";
-            }
-            if (!isSameProperty(fromUnit, toUnit)) {
-                //if the units are not in the same list, return error message
-                System.out.println("Error: invalid conversion");
-                return -1;
-            }
-
-            
-            
         }
     }
     
+    public static double convert(String fromUnit, String toUnit, double value) {
+        if (!isSameProperty(fromUnit, toUnit)) {
+            //if the units are not in the same category, return error message
+            System.out.println("Error: invalid conversion");
+            return -1;
+        }
+        
+        // if the fromUnit is the base unit
+        if (fromUnit.equals("meters")) {
+            return value * length.get(toUnit);
+        } else if (fromUnit.equals("grams")) {
+            return value * mass.get(toUnit);
+        } else if (fromUnit.equals("seconds")) {
+            return value * time.get(toUnit);
+        }
+
+        //if the toUnit is the base unit
+        if (toUnit.equals("meters")) {
+            return value / length.get(fromUnit);
+        } else if (toUnit.equals("grams")) {
+            return value / mass.get(fromUnit);
+        } else if (toUnit.equals("seconds")) {
+            return value / time.get(fromUnit);
+        }
+
+        //if neither the fromUnit nor the toUnit is the base unit
+        return value * length.get(toUnit) / length.get(fromUnit);
+
+        //return -1;
+    }
+
     
 }
