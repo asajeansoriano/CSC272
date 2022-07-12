@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class P2 {
 
@@ -23,10 +24,38 @@ public class P2 {
         keypad.put(8, "TUV");
         keypad.put(9, "WXY");
 
+        //find every permutation of 0, 1, 2 in 7 seven numbers
+        //the 0, 1, 2 represent the corresponding keypad value
+        //e.g. "ABC" is "012"
+        for (int index = 0; index < 7; index++) {
+            for (int i = 0; i < 2; i++) {
+                
+            }
+        }
+
         //write to String output
         String output = "";
-        
-        //find every possible permutation of the seven-letter combination corresponding to that number and avoid digits 0 and 1
-        
+
+        //get the number from the user
+        System.out.println("Please enter a seven-digit number: ");
+        Scanner input = new Scanner(System.in);
+        int phoneNumber = Integer.parseInt(input.nextLine());
+        String combination = "";
+
+        //find every letter combination for phone number and write to output
+        for (int i = 0; i < 7; i++) {
+            int digit = (phoneNumber / (int) Math.pow(10, i)) % 10;
+            //get letters from digit by splitting the keypad value and put into string array
+            String[] letters = keypad.get(digit).split("");
+            //given the seven-digit phone number, find every possible letter combination corresponding to the digit
+            for (int j = 0; j < 7; j++) {
+                combination += letters[j];
+            }
+            combination += "\n";
+            output.concat(combination);
+        }
+    
+
+        System.out.println(output);
     }
 }
