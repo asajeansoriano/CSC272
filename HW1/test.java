@@ -4,7 +4,9 @@ import java.util.*;
 public class test {
 
     public static void main(String[] args) {
-        System.out.println(new File("penis.txt").getAbsolutePath());
+        String test = "Hello world!";
+        //print test at index 2
+        System.out.println(test.charAt(2));
     }
     
 }

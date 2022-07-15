@@ -9,7 +9,7 @@ public class P1 {
     //String dictionary where the key is the unit and the value is the conversion factor
     static HashMap<String, Double> length = new HashMap<String, Double>();
     static HashMap<String, Double> mass = new HashMap<String, Double>();
-    static HashMap<String, Double> time = new HashMap<String, Double>();
+    static HashMap<String, Double> volume = new HashMap<String, Double>();
 
 
     public static void main(String[] args) {
@@ -23,12 +23,11 @@ public class P1 {
         mass.put("grams", 1.0);
         mass.put("ounces", 0.035274);
         mass.put("pounds", 0.00220462);
-        mass.put("tons", 907185.0);
-        //seconds is the base unit for time
-        time.put("seconds", 1.0);
-        time.put("minutes", 60.0);
-        time.put("hours", 3600.0);
-        time.put("days", 86400.0);
+        mass.put("tons", 0.0000011023);
+        //liter is the base unit for volume
+        volume.put("liters", 1.0);
+        volume.put("gallons", 0.2641720524);
+        volume.put("pints", 2.11338);
 
         //take in question from user input
         System.out.println("Please enter the question you would like to convert: ");
@@ -59,7 +58,7 @@ public class P1 {
             return true;
         } else if (mass.containsKey(fromUnit) && mass.containsKey(toUnit)) {
             return true;
-        } else if (time.containsKey(fromUnit) && time.containsKey(toUnit)) {
+        } else if (volume.containsKey(fromUnit) && volume.containsKey(toUnit)) {
             return true;
         } else {
             return false;
@@ -78,8 +77,8 @@ public class P1 {
             return value * length.get(toUnit);
         } else if (fromUnit.equals("grams")) {
             return value * mass.get(toUnit);
-        } else if (fromUnit.equals("seconds")) {
-            return value * time.get(toUnit);
+        } else if (fromUnit.equals("liters")) {
+            return value * volume.get(toUnit);
         }
 
         //if the toUnit is the base unit
@@ -87,15 +86,25 @@ public class P1 {
             return value / length.get(fromUnit);
         } else if (toUnit.equals("grams")) {
             return value / mass.get(fromUnit);
-        } else if (toUnit.equals("seconds")) {
-            return value / time.get(fromUnit);
+        } else if (toUnit.equals("liters")) {
+            return value / volume.get(fromUnit);
         }
 
         //if neither the fromUnit nor the toUnit is the base unit
-        return value * length.get(toUnit) / length.get(fromUnit);
+        if (length.containsKey(fromUnit) && length.containsKey(toUnit) && !toUnit.equals("meters") && !fromUnit.equals("meters")) {
+            return value * length.get(toUnit) / length.get(fromUnit);
+        }
+        if (mass.containsKey(fromUnit) && mass.containsKey(toUnit) && !toUnit.equals("grams") && !fromUnit.equals("grams")) {
+            return value * mass.get(toUnit) / mass.get(fromUnit);
+        }
+        if (volume.containsKey(fromUnit) && volume.containsKey(toUnit) && !toUnit.equals("liters") && !fromUnit.equals("liters")) {
+            return value * volume.get(toUnit) / volume.get(fromUnit);
+        }
 
-        //return -1;
+        return -1;
     }
+    
+    
 
     
 }

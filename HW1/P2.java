@@ -24,38 +24,62 @@ public class P2 {
         keypad.put(8, "TUV");
         keypad.put(9, "WXY");
 
+        String permutation = "";
+        String combinations[] = new String[2187];
+        int ctr = 0;
+
         //find every permutation of 0, 1, 2 in 7 seven numbers
         //the 0, 1, 2 represent the corresponding keypad value
         //e.g. "ABC" is "012"
-        for (int index = 0; index < 7; index++) {
-            for (int i = 0; i < 2; i++) {
-                
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                for (int k = 0; k < 3; k++) {
+                    for (int l = 0; l < 3; l++) {
+                        for (int m = 0; m < 3; m++) {
+                            for (int n = 0; n < 3; n++) {
+                                for (int o = 0; o < 3; o++) {
+                                    permutation = String.valueOf(i) + String.valueOf(j) + String.valueOf(k) + String.valueOf(l) + String.valueOf(m) + String.valueOf(n) + String.valueOf(o);
+                                    combinations[ctr++] = permutation;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-
+        
         //write to String output
         String output = "";
 
-        //get the number from the user
-        System.out.println("Please enter a seven-digit number: ");
-        Scanner input = new Scanner(System.in);
-        int phoneNumber = Integer.parseInt(input.nextLine());
-        String combination = "";
+        //read in the seven-digit number
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter a seven-digit number: ");
+        String number = in.nextLine();
 
-        //find every letter combination for phone number and write to output
-        for (int i = 0; i < 7; i++) {
-            int digit = (phoneNumber / (int) Math.pow(10, i)) % 10;
-            //get letters from digit by splitting the keypad value and put into string array
-            String[] letters = keypad.get(digit).split("");
-            //given the seven-digit phone number, find every possible letter combination corresponding to the digit
+        //iterate through combinations list and match the number to the keypad
+        for (int i = 0; i < 2187; i++) {
+            String temp = combinations[i];
             for (int j = 0; j < 7; j++) {
-                combination += letters[j];
+                int temp_index = Character.getNumericValue(temp.charAt(j));
+                int number_index = Character.getNumericValue(number.charAt(j));
+                //split keypad value and match to the corresponding digit
+                String keypad_value[] = keypad.get(number_index).split("");
+                output += keypad_value[temp_index];
             }
-            combination += "\n";
-            output.concat(combination);
+            output += "\n";
         }
-    
+        //System.out.println(output);
 
-        System.out.println(output);
+        //write output to file
+        File file = new File("output.txt");
+        System.out.println("Writing to file...");
+        try {
+            System.out.println("Done! See output.txt");
+            Formatter output_file = new Formatter(file);
+            output_file.format(output);
+            output_file.close();
+        } catch (Exception e) {
+            System.out.println("Error writing to file");
+        }
     }
 }
